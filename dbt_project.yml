@@ -31,15 +31,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   oms_dbt_proj:
-    customers_stg:
-      customers_stg:
-      schema: L2_PROCESSING
-    orders_stg:
-      schema: L2_PROCESSING
-    orderitems_stg:
-      schema: L2_PROCESSING
-    customerrevenue:
-      materialized: table
-    orders_fact:
-      schema: L2_PROCESSING
-      materialized: table
+    staging:
+      +schema: L2_PROCESSING
+      +materialized: view
+    marts:
+      +schema: L2_PROCESSING
+      +materialized: table
+    final:
+      +schema: L3_CONSUMPTION
+      +materialized: table

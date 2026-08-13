@@ -12,7 +12,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - dbt run: Because one of the strength of dbt is that we do not need to deal with DDL/DML statement, we need to have this command to help us deal with that problem. You can think like we go to buffet restaurant and use DQL to choose data (raw food), then dbt run will help us to DDL and DML into edible food (table or view). So our job is choosing we wanted data and how should data be cooked, other part just give to dbt run. 
 - {{ ref('old model') }} to reuse old model. We do not need to specify the specific path if
 .sql file is in subfolder of models (like staging or mart). dbt helps us to scan the whole models folder. Therefore, when naming, we should gives each models a uniqe name.
-
+- dbt seed command
 # Entity relationship diagram in my project 
 ![Entity relationship diagram](ERD.png)
 
@@ -55,7 +55,10 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - Staging subfolder: stores all staging models
 - Marts subfolder:  stores all intermediate models.
 - Final subfolder: stores all consumption models (which end user can directly use).
-
+# seeds
+- Folder that contains CSV files which are loaded into our DW by dbt seed command.
+- We just should use it when our data is static and infrequently changed such as country, zip code, location, ... 
+- We can also use ref function to refer to table that comes from seed like the regular models.
 # Reference Resources from dbt:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers

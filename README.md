@@ -12,7 +12,8 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - dbt run: Because one of the strength of dbt is that we do not need to deal with DDL/DML statement, we need to have this command to help us deal with that problem. You can think like we go to buffet restaurant and use DQL to choose data (raw food), then dbt run will help us to DDL and DML into edible food (table or view). So our job is choosing we wanted data and how should data be cooked, other part just give to dbt run. 
 - {{ ref('old model') }} to reuse old model. We do not need to specify the specific path if
 .sql file is in subfolder of models (like staging or mart). dbt helps us to scan the whole models folder. Therefore, when naming, we should gives each models a uniqe name.
-- dbt seed command
+- dbt seed: loading CSV file in seeds folder to DW.
+- dbt compile: compile .sql adhoc query in analyses folder into raw sql files without executing them.
 # Entity relationship diagram in my project 
 ![Entity relationship diagram](ERD.png)
 
@@ -59,6 +60,11 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - Folder that contains CSV files which are loaded into our DW by dbt seed command.
 - We just should use it when our data is static and infrequently changed such as country, zip code, location, ... 
 - We can also use ref function to refer to table that comes from seed like the regular models.
+# analyses
+- Folder that contains .sql file using for adhoc query and analysis on top of DW.
+- Therefore, data from .sql file is not materialized as table or view.
+- Basically, it just like normal SQL we use but we can leverage dbt syntax like ref fucntion to write it easier.
+- We can use dbt compile command to compile .sql file in analyses folders into raw .sql file. Then we can find it in target/compiled/project_name/analyses/name, copy and paste it in Bigquery to run adhoc query
 # Errors that I meet during this project.
 - Remember to first authorize with ACD before or after the dbt init by using gcloud auth application-default login. (Just right if you use dbt-bigquery)
 - If you want to see dependencies graph (Lineage) of models, you need to install Power User for dbt. But after installation, and it shows error like "No dbt core" then it may be choosing the global Python interpreter, you should change it to python interpreter in your venv where you install dbt.

@@ -65,6 +65,20 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - Therefore, data from .sql file is not materialized as table or view.
 - Basically, it just like normal SQL we use but we can leverage dbt syntax like ref fucntion to write it easier.
 - We can use dbt compile command to compile .sql file in analyses folders into raw .sql file. Then we can find it in target/compiled/project_name/analyses/name, copy and paste it in Bigquery to run adhoc query
+# sources.yml file
+- Is used to declare and document our raw input data tables that already exist in your data warehouse before dbt runs. ( the data that comes from loading process )
+### Note: Never use for intermediate
+- We do not need to hardcode the paths to raw table for staging models. 
+- Allows dbt to build a complete Data Lineage Graph (DAG) showing where raw data enters transformations.
+- Help us to check the freshness of the table.
+- In my source.yml file, you can see (the name and the identifier) - for table or (the name and the schema) - for schema. When we change the name of the raw table, we just need to change the name of the identifier in .yml file. You can think name is like the pointer that points to identifier. So the name in each staging model remains the same but the destinations of their pointer change to new name - which we just need to change only one line in source.yml.
+```sql
+    {{ source('landing', 'cust') }}
+```
+to 
+```sql
+    {{ source('L1_LANDING', 'customers') }}
+```
 # Errors that I meet during this project.
 - Remember to first authorize with ACD before or after the dbt init by using gcloud auth application-default login. (Just right if you use dbt-bigquery)
 - If you want to see dependencies graph (Lineage) of models, you need to install Power User for dbt. But after installation, and it shows error like "No dbt core" then it may be choosing the global Python interpreter, you should change it to python interpreter in your venv where you install dbt.

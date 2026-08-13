@@ -59,6 +59,10 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - Folder that contains CSV files which are loaded into our DW by dbt seed command.
 - We just should use it when our data is static and infrequently changed such as country, zip code, location, ... 
 - We can also use ref function to refer to table that comes from seed like the regular models.
+# Errors that I meet during this project.
+- Remember to first authorize with ACD before or after the dbt init by using gcloud auth application-default login. (Just right if you use dbt-bigquery)
+- If you want to see dependencies graph (Lineage) of models, you need to install Power User for dbt. But after installation, and it shows error like "No dbt core" then it may be choosing the global Python interpreter, you should change it to python interpreter in your venv where you install dbt.
+- 
 # Reference Resources from dbt:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers

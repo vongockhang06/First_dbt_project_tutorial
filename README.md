@@ -79,6 +79,15 @@ to
 ```sql
     {{ source('L1_LANDING', 'customers') }}
 ```
+# tests
+- There are two types of tests:
++ Generic: kind of evolving from singular test. Instead of writing many singular tests with same logic for many different models, we can use generic test by parameterizing the model name and column name.
++ Singular: writing a SQL query that identifies failing record. A singular test just can be used only for one model, it cannot be used across many ones because the table ref() function is hard coded.
+## 4 built-in generic tests
++ Not_null: ensures no columns have null values.
++ Unique: ensures each row in table is unique.
++ Accepted_values: ensure column values are within the specified values.
++ Relationships: ensures the relationships between tables are correct.
 # Errors that I meet during this project.
 - Remember to first authorize with ACD before or after the dbt init by using gcloud auth application-default login. (Just right if you use dbt-bigquery)
 - If you want to see dependencies graph (Lineage) of models, you need to install Power User for dbt. But after installation, and it shows error like "No dbt core" then it may be choosing the global Python interpreter, you should change it to python interpreter in your venv where you install dbt.

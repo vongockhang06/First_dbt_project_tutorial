@@ -1,7 +1,7 @@
 sources:
   - name: landing
     description: The primary source system for order management system(OMS) data analytics.  
-    database: SLEEKMART_OMS
+    database: dbt-play-around
     schema: L1_LANDING
     config:
       freshness:
@@ -12,16 +12,16 @@ sources:
     tables:
       - name: cust
         description: The customers table from order management system(OMS).      
-        identifier: customers
+        identifier: CUSTOMERS
       - name: orders
         description: The orders table from order management system(OMS).      
-        identifier: orders
+        identifier: ORDERS
       - name: orderitems
         description: The orderitems table from order management system(OMS).      
-        identifier: orderitems
+        identifier: ORDERITEMS
       - name: employees
         description: The employees table from order management system(OMS).      
-        identifier: employees
+        identifier: EMPLOYEES
         columns:
           - name: address
             description: Full Address of emplyees for Transport Arrangements.          

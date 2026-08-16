@@ -7,15 +7,19 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 
 # Commands that I learned during the project 
 ### Note: For more details, check MarkPhamm's github, he already helps us to summarize all of the neccessary thing.
-- dbt init: for BigQuery dbt project intialization, when we input for project -it should be our project-id that has already existed on cloud and we also use need to authorize ourself with following command gcloud auth application-default login when we choose oath method to use ADC.
-- dbt debug: checking is everything ok after dbt init
-- dbt run: Because one of the strength of dbt is that we do not need to deal with DDL/DML statement, we need to have this command to help us deal with that problem. You can think like we go to buffet restaurant and use DQL to choose data (raw food), then dbt run will help us to DDL and DML into edible food (table or view). So our job is choosing we wanted data and how should data be cooked, other part just give to dbt run. 
-- {{ ref('old model') }} to reuse old model. We do not need to specify the specific path if
+- ```dbt init```: for BigQuery dbt project intialization, when we input for project -it should be our project-id that has already existed on cloud and we also use need to authorize ourself with following command gcloud auth application-default login when we choose oath method to use ADC.
+- ```dbt debug```: checking is everything ok after dbt init
+- ```dbt run```: Because one of the strength of dbt is that we do not need to deal with DDL/DML statement, we need to have this command to help us deal with that problem. You can think like we go to buffet restaurant and use DQL to choose data (raw food), then dbt run will help us to DDL and DML into edible food (table or view). So our job is choosing we wanted data and how should data be cooked, other part just give to dbt run. 
+- ```{{ ref('old model') }}``` to reuse old model. We do not need to specify the specific path if
 .sql file is in subfolder of models (like staging or mart). dbt helps us to scan the whole models folder. Therefore, when naming, we should gives each models a uniqe name.
-- dbt seed: loading CSV file in seeds folder to DW.
-- dbt compile: compile .sql adhoc query in analyses folder into raw sql files without executing them.
-- dbt test: apply test to models
-- dbt source freshness: check the current freshness of the project's sources
+- ```dbt seed```: loading CSV file in seeds folder to DW.
+- ```dbt compile```: compile .sql adhoc query in analyses folder into raw sql files without executing them.
+- ```dbt test```: apply test to models
+- ```dbt source freshness```: check the current freshness of the project's sources
+- ```{{ source('defined_schema_name','defined_table_name')  }}```: to points our defined name to sources name.
+- ```{{ doc(% docs model_name %)}}``` writing doc here ```{{ doc(% enddocs %)}}```: so we can reuse doc, support DRY coding principle.
+- ```dbt docs generate```: create catalog.json file doc in target folder. This is the command we use to refresh the view docs
+- ```dbt docs serve```: create local host interface for us to see doc
 # Entity relationship diagram in my project 
 ![Entity relationship diagram](ERD.png)
 
@@ -73,14 +77,47 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - We do not need to hardcode the paths to raw table for staging models. 
 - Allows dbt to build a complete Data Lineage Graph (DAG) showing where raw data enters transformations.
 - Help us to check the freshness of the table.
-- In my source.yml file, you can see (the name and the identifier) - for table or (the name and the schema) - for schema. When we change the name of the raw table, we just need to change the name of the identifier in .yml file. You can think name is like the pointer that points to identifier. So the name in each staging model remains the same but the destinations of their pointer change to new name - which we just need to change only one line in source.yml.
+- In my source.yml file, you can see (the name and the identifier) - for table or (the name and the schema) - for schema. When we change the name of the raw table, we just need to change the name of the identifier in .yml file. You can think name is the pointer that points to identifier. So the name in each staging model remains the same but the destinations of their pointer change to new name - which we just need to change only one line in source.yml.
 ```sql
     {{ source('landing', 'cust') }}
 ```
-to 
+equivalently means
 ```sql
-    {{ source('L1_LANDING', 'customers') }}
+    L1_LANDING.CUSTOMERS
 ```
+# dbt document
+- There are several reasons why we need to have documentations:
+    + Communitcation among skateholders
+    + New members can quickly understand
+    + Readability and Maintainability
+- One of the strength of dbt is auto-generated documentations.
+- ```description``` in .yml is also a way for us to manually write short doc for models or sources.
+- Another way is use .md file in models folder, we use it for large and support DRY coding principle. It just like writing README file except it starts with 
+```sql
+    {% docs name %}
+```
+and end with
+```sql
+    {% enddocs %}
+``` 
+then we can just references the doc blocks in .yml file:
+```code
+-   name: orders_stg
+    description: Staged orders data from order management system (oms), with minor row-level transformations.  
+    columns:
+      - name: OrderID
+        description: The primary key for orders_stg table.      
+        tests:
+          - unique
+          - not_null
+
+      - name: StatusCD
+        description: "{{ doc('StatusCD') }}" #instead of writing text right here
+        tests:
+          - accepted_values:
+              values: ['01', '02', '03']
+```  
+- For models, descriptions can happen at the model, source, or column level.
 # tests
 - There are two types of tests:
 + Generic: kind of evolving from singular test. Instead of writing many singular tests with same logic for many different models, we can use generic test by parameterizing the model name and column name.
@@ -97,7 +134,6 @@ to
 # Errors that I meet during this project.
 - Remember to first authorize with ACD before or after the dbt init by using gcloud auth application-default login. (Just right if you use dbt-bigquery)
 - If you want to see dependencies graph (Lineage) of models, you need to install Power User for dbt. But after installation, and it shows error like "No dbt core" then it may be choosing the global Python interpreter, you should change it to python interpreter in your venv where you install dbt.
-- 
 # Reference Resources from dbt:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers

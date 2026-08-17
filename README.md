@@ -4,7 +4,7 @@
 - dbt Tutorial (Data Build Tool) Hands-on-courese - Youtube from SleekData
 - https://github.com/MarkPhamm/dbt-Fundamental for reading, summary and reference
 I recommend you should watch tutorial and read MarkPhamm's github at the same time
-
+- https://github.com/sleekdata/oms-db-setup for setting up database. Remember to change some syntax if you are using BigQuery like me instead of Snowflake. There are 10 .sql file to initialize database. The content of the 10th .sql file will create new schema which I use to practice with macro. You can read its README for more details.
 # Commands that I learned during the project 
 ### Note: For more details, check MarkPhamm's github, he already helps us to summarize all of the neccessary thing.
 - ```dbt init```: for BigQuery dbt project intialization, when we input for project -it should be our project-id that has already existed on cloud and we also use need to authorize ourself with following command gcloud auth application-default login when we choose oath method to use ADC.

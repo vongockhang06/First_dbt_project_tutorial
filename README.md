@@ -138,6 +138,10 @@ then we can just references the doc blocks in .yml file:
     + Jinja: to make SQL and YAML dynamic
 - Belows are some jinja statement:
 ![Jinja concept](jinja_concept.png)
+# macros
+- Just like writing user defined function in Python except in dbt, it does not require return keyword.
+- macro ~ SQL + jinja.
+- As we can see, the main usage of macro is for reusing code block across multiple models, maintainability.
 # Errors that I meet during this project.
 - Remember to first authorize with ACD before or after the dbt init by using gcloud auth application-default login. (Just right if you use dbt-bigquery)
 - If you want to see dependencies graph (Lineage) of models, you need to install Power User for dbt. But after installation, and it shows error like "No dbt core" then it may be choosing the global Python interpreter, you should change it to python interpreter in your venv where you install dbt.

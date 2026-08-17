@@ -37,6 +37,13 @@ models:
     marts:
       +schema: L2_PROCESSING
       +materialized: table
+      profit_us:
+        +schema: TRAINING
+      profit_uk:
+        +schema: TRAINING
+      profit_india:
+        +schema: TRAINING
     final:
       +schema: L3_CONSUMPTION
       +materialized: table
+    

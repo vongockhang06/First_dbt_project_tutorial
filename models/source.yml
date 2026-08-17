@@ -32,5 +32,8 @@ sources:
       - name: sales_europe
       - name: sales_asia
       - name: stores
+        identifier: STORES
       - name: suppliers
+        identifier: SUPPLIERS
       - name: products
+        identifier: PRODUCTS

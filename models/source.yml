@@ -1,4 +1,13 @@
 sources:
+  - name: training
+    schema: TRAINING
+    tables:
+      - name: sales_us
+        identifier: sales_us
+      - name: sales_uk
+        identifier: sales_uk
+      - name: sales_india
+        identifier: sales_india
   - name: landing
     description: The primary source system for order management system(OMS) data analytics.  
     database: dbt-play-around
@@ -28,9 +37,6 @@ sources:
             tests:
               - not_null
               - string_not_empty
-      - name: sales_us
-      - name: sales_europe
-      - name: sales_asia
       - name: stores
         identifier: STORES
       - name: suppliers

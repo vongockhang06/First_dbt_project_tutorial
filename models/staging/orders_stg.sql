@@ -1,4 +1,6 @@
-{{ config(materialized='incremental') }}
+{{ config(materialized='incremental',
+            unique_key='ORDERID'   
+        ) }}
 SELECT
     OrderID,
     OrderDate,

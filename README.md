@@ -24,6 +24,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - ```dbt docs generate```: create catalog.json file doc in target folder. This is the command we use to refresh the view docs
 - ```dbt docs serve```: create local host interface for us to see doc
 - ```dbt dep```: to install package we define in packages.yml
+- ```dbt snapshot```: run all snapshots in project
 # Entity relationship diagram in my project 
 ![Entity relationship diagram](ERD.png)
 
@@ -55,7 +56,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
     + Requires defining an is_incremental() macro filter and a unique key to handle updates.
     + Requires configuration to prevent duplicate records.
     + Code snippet:
-    ```
+    ```sql
         ---1.config
         {{ config(materialized='incremental') }}
 
@@ -71,7 +72,26 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
         + Destination table already exists in database.
         + dbt is not run in full refresh mode.
         + ```{{config(materialized='incremental')}}```.
-- Snapshots
+- Snapshots:
+    + A specialized dbt workflow designed to capture Type 2 Slowly Changing Dimensions (SCD Type 2). SCD is kind of how you treat old value when it gets updated. For type 2, history is preserved as new row.
+    + Create in snapshot folder.
+    + Code snippet:
+    ```sql
+        {% snapshot snapshot_name %}
+        ---1.config
+        {{
+            config=(
+                target_schema='schema_name',
+                unique_key='column_name',
+                strategy='timestamp',
+                updated_at='column_name'
+            )
+        }}
+        ---2. Our model
+        SELECT ...
+
+        {%endsnapshot%}
+    ```
 ## Modularity
 - Breaking donw large models into multiple smaller models.
 - Better for readability, reuseability, maintainanbility, scalability, testability. 

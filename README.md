@@ -10,6 +10,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - ```dbt init```: for BigQuery dbt project intialization, when we input for project -it should be our project-id that has already existed on cloud and we also use need to authorize ourself with following command gcloud auth application-default login when we choose oath method to use ADC.
 - ```dbt debug```: checking is everything ok after dbt init
 - ```dbt run```: Because one of the strength of dbt is that we do not need to deal with DDL/DML statement, we need to have this command to help us deal with that problem. You can think like we go to buffet restaurant and use DQL to choose data (raw food), then dbt run will help us to DDL and DML into edible food (table or view). So our job is choosing we wanted data and how should data be cooked, other part just give to dbt run. 
+- ```dbt run --select```: dbt will run a specific model, not run all of them.
 - ```{{ ref('old model') }}``` to reuse old model. We do not need to specify the specific path if
 .sql file is in subfolder of models (like staging or mart). dbt helps us to scan the whole models folder. Therefore, when naming, we should gives each models a uniqe name.
 - ```dbt seed```: loading CSV file in seeds folder to DW.
@@ -29,7 +30,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - Two yml files that we need to understand and interact with most of the time: profiles.yml ( in Ubuntu its path is ~/.dbt/profiles.yml) and dbt_project.yml ( right in our dbt project ) 
 ## Materialization: {{ config(materialized='__') }}
 - View: 
-    + Store only SQL definition, no real data on disk. 
+    + Store only SQL definition, no real data on disk. We still have the object in DW 
     + Run every time the view is queried
     + Building time is fast, but slow for downstream query if data is large or query is complex.
     + Incurs compute costs every time someone queries the view.
@@ -46,6 +47,12 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
     + Lower warehouse cost because it scans significantly fewer rows per run.
     + Requires defining an is_incremental() macro filter and a unique key to handle updates.
     + Requires configuration to prevent duplicate records.
+- Ephemeral:
+    + No objects are created in DW => Keeping DW clean.
+    + dbt converts the model's SQL code into a CTE and injects it directly into any downstream models that reference it via ```ref()```.
+    + Because there is no object created in DW so we can not query ephemeral model in our warehouse outside of dbt.
+    + If multiple downstream models reference a heavy ephemeral model, DW computes that CTE multiple times, which can increase warehouse costs or query times.
+- Snapshots
 ## Modularity
 - Breaking donw large models into multiple smaller models.
 - Better for readability, reuseability, maintainanbility, scalability, testability. 

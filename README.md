@@ -20,6 +20,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - ```{{ doc(% docs model_name %)}}``` writing doc here ```{{ doc(% enddocs %)}}```: so we can reuse doc, support DRY coding principle.
 - ```dbt docs generate```: create catalog.json file doc in target folder. This is the command we use to refresh the view docs
 - ```dbt docs serve```: create local host interface for us to see doc
+- ```dbt dep```: to install package we define in packages.yml
 # Entity relationship diagram in my project 
 ![Entity relationship diagram](ERD.png)
 
@@ -142,6 +143,10 @@ then we can just references the doc blocks in .yml file:
 - Just like writing user defined function in Python except in dbt, it does not require return keyword.
 - macro ~ SQL + jinja.
 - As we can see, the main usage of macro is for reusing code block across multiple models, maintainability.
+# dbt_packages
+- Just like Python's module. There is someone already help us to prebuild common use case dbt project. For more information, follow this [link](https://docs.getdbt.com/docs/build/packages)
+- Where could we find dbt packages: [dbt hub](https://hub.getdbt.com/)
+- We can also install dbt packages through github - watch packages.yml
 # Errors that I meet during this project.
 - Remember to first authorize with ACD before or after the dbt init by using gcloud auth application-default login. (Just right if you use dbt-bigquery)
 - If you want to see dependencies graph (Lineage) of models, you need to install Power User for dbt. But after installation, and it shows error like "No dbt core" then it may be choosing the global Python interpreter, you should change it to python interpreter in your venv where you install dbt.

@@ -11,6 +11,8 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - ```dbt debug```: checking is everything ok after dbt init
 - ```dbt run```: Because one of the strength of dbt is that we do not need to deal with DDL/DML statement, we need to have this command to help us deal with that problem. You can think like we go to buffet restaurant and use DQL to choose data (raw food), then dbt run will help us to DDL and DML into edible food (table or view). So our job is choosing we wanted data and how should data be cooked, other part just give to dbt run. 
 - ```dbt run --select```: dbt will run a specific model, not run all of them.
+- ```dbt run --exclude```: dbt run all of models except specific ones.
+- ```dbt run --full-refresh```: Forces a full refresh for incremental models.
 - ```{{ ref('old model') }}``` to reuse old model. We do not need to specify the specific path if
 .sql file is in subfolder of models (like staging or mart). dbt helps us to scan the whole models folder. Therefore, when naming, we should gives each models a uniqe name.
 - ```dbt seed```: loading CSV file in seeds folder to DW.
@@ -41,17 +43,34 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
     + Building time is slow becase it need to really compute and write data to disk, but fast for downstream query
     + Incurs compute costs during dbt run but downstream queries only scan the pre-built table.
     + Cannot update latest data. We need to regularly dbt run.
+- Ephemeral:
+    + No objects are created in DW => Keeping DW clean.
+    + dbt converts the model's SQL code into a CTE and injects it directly into any downstream models that reference it via ```ref()```.
+    + Because there is no object created in DW so we can not query ephemeral model in our warehouse outside of dbt.
+    + If multiple downstream models reference a heavy ephemeral model, DW computes that CTE multiple times, which can increase warehouse costs or query times.
 - Incremental - like table but have some difference:
     + Appends or updates only new/changed records since the last run while table builds everything again per run.
     + Build time is faster than table.
     + Lower warehouse cost because it scans significantly fewer rows per run.
     + Requires defining an is_incremental() macro filter and a unique key to handle updates.
     + Requires configuration to prevent duplicate records.
-- Ephemeral:
-    + No objects are created in DW => Keeping DW clean.
-    + dbt converts the model's SQL code into a CTE and injects it directly into any downstream models that reference it via ```ref()```.
-    + Because there is no object created in DW so we can not query ephemeral model in our warehouse outside of dbt.
-    + If multiple downstream models reference a heavy ephemeral model, DW computes that CTE multiple times, which can increase warehouse costs or query times.
+    + Code snippet:
+    ```
+        ---1.config
+        {{ config(materialized='incremental') }}
+
+        ---2. Our model sql
+        SELECT ....
+
+        ---3. WHERE clause that finds delta records from the source
+        {% if is_incremental() %}
+        WHERE 
+        {% endif %}
+    ```
+    + WHERE clause return true only when 3 following conditions are satisfied:
+        + Destination table already exists in database.
+        + dbt is not run in full refresh mode.
+        + ```{{config(materialized='incremental')}}```.
 - Snapshots
 ## Modularity
 - Breaking donw large models into multiple smaller models.

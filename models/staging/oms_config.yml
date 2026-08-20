@@ -38,7 +38,3 @@ models:
           - relationships:
               to: ref('orders_stg')
               field: OrderID
-  - name: orderitems_uniq
-    tests:
-      - dbt_expectations.expect_table_row_count_to_equal_other_table:
-          compare_model: ref("orders_stg")

@@ -165,6 +165,11 @@ then we can just references the doc blocks in .yml file:
               values: ['01', '02', '03']
 ```  
 - For models, descriptions can happen at the model, source, or column level.
+- After running ```dbt docs generate``` and ```dbt docs serve```:
+    + UI for controlling our catalog
+        ![interface](UI.png)
+    + We can see the whole lineage graph
+        ![Lineage Graph](lineage_graph.png)
 # tests
 - There are two types of tests:
 + Generic: kind of evolving from singular test. Instead of writing many singular tests with same logic for many different models, we can use generic test by parameterizing the model name and column name.

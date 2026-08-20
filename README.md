@@ -20,7 +20,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 - ```dbt test```: apply test to models
 - ```dbt source freshness```: check the current freshness of the project's sources
 - ```{{ source('defined_schema_name','defined_table_name')  }}```: to points our defined name to sources name.
-- ```{{ doc(% docs model_name %)}}``` writing doc here ```{{ doc(% enddocs %)}}```: so we can reuse doc, support DRY coding principle.
+- ```{% docs model_name %}``` writing doc here ```{{ doc(% enddocs %)}}```: so we can reuse doc, support DRY coding principle.
 - ```dbt docs generate```: create catalog.json file doc in target folder. This is the command we use to refresh the view docs
 - ```dbt docs serve```: create local host interface for us to see doc
 - ```dbt dep```: to install package we define in packages.yml
@@ -176,8 +176,6 @@ then we can just references the doc blocks in .yml file:
 + Unique: ensures each row in table is unique.
 + Accepted_values: ensure column values are within the specified values.
 + Relationships: ensures the relationships between tables are correct.
-## Test Coverage
-- (No of test scenarios executed / Total no of test scenarios) *100
 # Jinja
 - In dbt, there are 3 main languages that we use:
     + SQL: for writing test and models.

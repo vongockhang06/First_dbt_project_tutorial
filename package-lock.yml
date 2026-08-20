@@ -1,0 +1,11 @@
+packages:
+  - name: dbt_utils
+    package: dbt-labs/dbt_utils
+    version: 1.4.1
+  - git: https://github.com/calogica/dbt-expectations.git
+    name: dbt_expectations
+    revision: 3b2d4e61ce69e99cd480d066e026936ecab9827c
+  - name: dbt_date
+    package: calogica/dbt_date
+    version: 0.7.2
+sha1_hash: 0ffb8b8a1c12fe7c4fc1f9024c784b444f9a0f5f

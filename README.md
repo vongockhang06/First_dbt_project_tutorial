@@ -1,8 +1,9 @@
 # Welcome to my dbt first project - tutorial
-
+### This project is the summary of sources that I learn and a little bit of my explanation.
 # Learning source
 - dbt Tutorial (Data Build Tool) Hands-on-courese - Youtube from SleekData
-- https://github.com/MarkPhamm/dbt-Fundamental for reading, summary and reference
+### This is the main tutorial that I followed.
+- https://github.com/MarkPhamm/dbt-Fundamental for reading, summary and reference - especially in naming convention, file organization in dbt workspace and difference between development vs deployment
 I recommend you should watch tutorial and read MarkPhamm's github at the same time
 - https://github.com/sleekdata/oms-db-setup for setting up database. Remember to change some syntax if you are using BigQuery like me instead of Snowflake. There are 10 .sql file to initialize database. The content of the 10th .sql file will create new schema which I use to practice with macro. You can read its README for more details.
 # Commands that I learned during the project 
@@ -44,11 +45,13 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
     + Building time is slow becase it need to really compute and write data to disk, but fast for downstream query
     + Incurs compute costs during dbt run but downstream queries only scan the pre-built table.
     + Cannot update latest data. We need to regularly dbt run.
+### Note: for view and table difference you can check customerorders.sql and customerodrers2.sql
 - Ephemeral:
     + No objects are created in DW => Keeping DW clean.
     + dbt converts the model's SQL code into a CTE and injects it directly into any downstream models that reference it via ```ref()```.
     + Because there is no object created in DW so we can not query ephemeral model in our warehouse outside of dbt.
     + If multiple downstream models reference a heavy ephemeral model, DW computes that CTE multiple times, which can increase warehouse costs or query times.
+### Note: check customers_stg.sql and what is the difference between your local and cloud DW
 - Incremental - like table but have some difference:
     + Appends or updates only new/changed records since the last run while table builds everything again per run.
     + Build time is faster than table.
@@ -92,6 +95,7 @@ I recommend you should watch tutorial and read MarkPhamm's github at the same ti
 
         {%endsnapshot%}
     ```
+### Note: You can more learn about how can we handle storage cost in production. Because I think when we implement SCD 2, our landing table has that data (for example with the size A) and snapshot table also has that data (size A) plus history data (size B). Therefore, in total is 2A+B size.
 ## Modularity
 - Breaking donw large models into multiple smaller models.
 - Better for readability, reuseability, maintainanbility, scalability, testability. 
@@ -192,6 +196,7 @@ then we can just references the doc blocks in .yml file:
 - Just like writing user defined function in Python except in dbt, it does not require return keyword.
 - macro ~ SQL + jinja.
 - As we can see, the main usage of macro is for reusing code block across multiple models, maintainability.
+### You can check find_rev_cost_profit.sql which I wrote a litte different from tutorial for better readability and read comment in gererate_schema_name.sql to know why do we used it.
 # dbt_packages
 - Just like Python's module. There is someone already help us to prebuild common use case dbt project. For more information, follow this [link](https://docs.getdbt.com/docs/build/packages)
 - Where could we find dbt packages: [dbt hub](https://hub.getdbt.com/)

@@ -6,6 +6,28 @@
 - https://github.com/MarkPhamm/dbt-Fundamental for reading, summary and reference - especially in naming convention, file organization in dbt workspace and difference between development vs deployment
 I recommend you should watch tutorial and read MarkPhamm's github at the same time
 - https://github.com/sleekdata/oms-db-setup for setting up database. Remember to change some syntax if you are using BigQuery like me instead of Snowflake. There are 10 .sql file to initialize database. The content of the 10th .sql file will create new schema which I use to practice with macro. You can read its README for more details.
+# Set up (Ubuntu) 
+### Assume that you already install python3, pip and have some familiarity with GCP - know how to create a project
+- You can first access GCP, create your account, project and create the tutorial dataset
+- ```mkdir dbt_workspace```: create folder for dbt workspace
+- ```python3 -m venv dbt_env ```: create virtual environment
+- ```source dbt_env/bin/activate```: activate venv
+- ```pip install dbt-bigquery```: install dbt core
+- Make sure that you already have gcloud command line. If you dont, you can find more information in the following link https://docs.cloud.google.com/sdk/docs/install-sdk#deb
+- ```gcloud auth application-default login ```: Connect to BigQuery use oath method. It will give you a link, then go to the link and login to your account.
+- ```dbt init```: initialize your dbt project. Then dbt asks you some information to create project
+    + Name: depend on you
+    + Which database: choose bigquery
+    + Authentication method: choose oauth
+    + project (GCP project id): MUST be the same as your GCP project id that you create in GCP 
+    + dataset: the same name when you create your dataset on GCP
+    + threads: 1
+    + job_execution_timeout_seconds [300]: choose 300
+    + Desired location option : US
+- After that, you can see new directory ```project_name_that_you_choose```
+- ```cd project_name_that_you_choose```
+- ```dbt debug```: If everything is ok then it shows ``` All checks passed!```
+### Note: You can go to ~/.dbt/profiles.yml to see your configuration
 # Commands that I learned during the project 
 ### Note: For more details, check MarkPhamm's github, he already helps us to summarize all of the neccessary thing.
 - ```dbt init```: for BigQuery dbt project intialization, when we input for project -it should be our project-id that has already existed on cloud and we also use need to authorize ourself with following command gcloud auth application-default login when we choose oath method to use ADC.
